@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Valentine 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  height:100vh;
+  font-family:'Poppins',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(270deg,#ffe7ee,#f3ecff,#ffe7ee);
+  background-size:600% 600%;
+  animation:gradientMove 12s ease infinite;
+  overflow:hidden;
+  cursor:none;
+}
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* heart cursor */
+#heartCursor{
+  position:fixed;
+  font-size:20px;
+  pointer-events:none;
+  z-index:10000;
+}
+
+/* teddy */
+#teddy{
+  position:fixed;
+  font-size:26px;
+  pointer-events:none;
+}
+
+/* envelope */
+#envelopeScreen{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg,#ffe7ee,#f3ecff);
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:999;
+}
+.envelope{font-size:80px;cursor:pointer;animation:bounce 2s infinite;}
+@keyframes bounce{50%{transform:translateY(-15px);}}
+
+/* floating hearts */
+.heart{
+  position:absolute;
+  font-size:18px;
+  animation:float 10s linear infinite;
+  opacity:.5;
+}
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+
+/* card */
+.card{
+  background:#fff;
+  width:95%;max-width:750px;
+  padding:90px 40px;
+  border-radius:35px;
+  text-align:center;
+  box-shadow:0 40px 90px rgba(255,105,180,.25);
+  transition:.4s;
+}
+.hide{opacity:0;transform:scale(.9);}
+
+.photo{
+  width:300px;height:440px;border-radius:28px;
+  object-fit:cover;margin:0 auto 35px;
+  box-shadow:0 0 40px #ff6fae;
+  transition:transform .2s ease;
+}
+
+h1{font-family:'Pacifico';font-size:36px;color:#ff4f9a;min-height:60px;}
+.subtitle{margin-bottom:20px;}
+.buttons{display:flex;justify-content:center;gap:25px;}
+
+button{
+  padding:18px 40px;border-radius:50px;border:none;
+  font-size:20px;cursor:pointer;transition:.3s;
+}
+#yes{background:#ff6fae;color:#fff;}
+#yes:hover{transform:scale(1.2);}
+#no{background:#e9eef5;}
+
+.success,#noScreen{display:none;}
+</style>
+</head>
+
+<body>
+
+<div id="envelopeScreen">
+  <div class="envelope" onclick="openLetter()">💌</div>
+  <p>Open this letter</p>
+</div>
+
+<audio id="bgMusic" autoplay loop muted>
+  <source src="audio/perfect ❤️by Ed Sheeran ❤️. WhatsApp status....mp3" type="audio/mpeg">
+</audio>
+
+<div class="card" id="card">
+  <img src="images/couple.jpeg" class="photo">
+  <h1 id="typeText"></h1>
+  <p class="subtitle">Annoying you since 2 years, and now I would love to annoy you even more~</p>
+  <p id="cuteLine" style="color:#ff4f9a;font-weight:500;"></p>
+
+  <div class="buttons">
+    <button id="yes">Yes! 💕</button>
+    <button id="no">No 🙈</button>
+  </div>
+</div>
+
+<div class="card" id="noScreen">
+  <h1>Wait 🥺</h1>
+  <p>Are you really sure? I already planned our cute memories 💕</p>
+  <div class="buttons">
+    <button id="yesAgain">Okay fine, YES 💖</button>
+  </div>
+</div>
+
+<div class="card success" id="success">
+  <h1>You said YES 💘</h1>
+  <p>I love you so much and I'm grateful to have you as my partner, best friend and support system.</p>
+</div>
+
+<div id="heartCursor">💖</div>
+<div id="teddy">🧸</div>
+
+<script>
+// envelope
+function openLetter(){
+  document.getElementById("envelopeScreen").style.display="none";
+}
+
+// floating hearts
+for(let i=0;i<25;i++){
+  let h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+}
+
+// typewriter
+const text="Will you be my Valentine, Cara? 💖";
+let i=0;
+function typeWriter(){
+  if(i<text.length){
+    document.getElementById("typeText").innerHTML+=text[i++];
+    setTimeout(typeWriter,60);
+  }
+}
+typeWriter();
+
+// cute lines
+const lines=[
+"You’re my favorite notification 💗",
+"You make my bad days better",
+"Still crushing on you every day",
+"You are my safe place",
+"Life feels softer with you"
+];
+let idx=0;
+setInterval(()=>{
+  document.getElementById("cuteLine").innerText=lines[idx];
+  idx=(idx+1)%lines.length;
+},3000);
+
+// buttons logic
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const yesAgain=document.getElementById("yesAgain");
+const card=document.getElementById("card");
+const noScreen=document.getElementById("noScreen");
+const success=document.getElementById("success");
+
+function showScreen(a,b){
+  a.classList.add("hide");
+  setTimeout(()=>{a.style.display="none";b.style.display="block";},400);
+}
+
+yes.onclick=()=>{confetti();showScreen(card,success);}
+no.onclick=()=>showScreen(card,noScreen);
+yesAgain.onclick=()=>{confetti();showScreen(noScreen,success);}
+
+// runaway no
+no.addEventListener("mouseover",()=>{
+  no.style.transform=`translate(${Math.random()*300-150}px,${Math.random()*200-100}px)`;
+});
+
+// confetti
+function confetti(){
+  for(let i=0;i<35;i++){
+    let c=document.createElement("div");
+    c.innerHTML="🎉";
+    c.style.position="absolute";
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-10px";
+    c.style.animation="float 3s linear";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+}
+
+// cursor + teddy
+const heart=document.getElementById("heartCursor");
+const teddy=document.getElementById("teddy");
+document.addEventListener("mousemove",(e)=>{
+  heart.style.left=e.clientX+"px";
+  heart.style.top=e.clientY+"px";
+  teddy.style.left=e.clientX+18+"px";
+  teddy.style.top=e.clientY+18+"px";
+});
+
+// photo tilt
+const photo=document.querySelector(".photo");
+photo.addEventListener("mousemove",(e)=>{
+  const r=photo.getBoundingClientRect();
+  const x=e.clientX-r.left;
+  const y=e.clientY-r.top;
+  photo.style.transform=`rotateX(${-(y-r.height/2)/20}deg) rotateY(${(x-r.width/2)/20}deg) scale(1.05)`;
+});
+photo.addEventListener("mouseleave",()=>photo.style.transform="");
+
+// music fix
+window.addEventListener("load",()=>{
+  const m=document.getElementById("bgMusic");
+  m.play().then(()=>m.muted=false).catch(()=>{
+    document.body.onclick=()=>{m.muted=false;m.play();}
+  });
+});
+</script>
+
+</body>
+</html>
